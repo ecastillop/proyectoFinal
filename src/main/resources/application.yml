@@ -1,0 +1,4 @@
+database:
+  url: jdbc:sqlserver://servidoruniversidad.database.windows.net:1433;database=proyectotp;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+  username: ecastillo@servidoruniversidad
+  password: u24239376$
