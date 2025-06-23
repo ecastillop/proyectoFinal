@@ -58,16 +58,17 @@ public class EmployeeUI extends JPanel {
             catch (Exception e) {}
         });
     }
-
+    // CONSTRUCTOR
+    // aqui se construye todo lo que tendrá la vista
     public EmployeeUI() throws Exception {
         /* ---------- ventana ---------- */
         setLayout(new BorderLayout());
         /* ---------- carga inicial ---------- */
-        employeeService.refresh();
-        buildListPanel();
-        buildFormPanel();
-        add(root);
-        cards.show(root, "LISTA");
+        employeeService.refresh(); // mediante el metodo refresh del SERVICE fuerza actualizar el arrayList cache
+        buildListPanel(); // construye la lista de paneles
+        buildFormPanel(); // construye el panel de formulario
+        add(root); // agrega panel al "DOM" de la interfaz
+        cards.show(root, "LISTA"); // muestra layout con identificador LISTA en el DOM
     }
 
     /* ===================================================== */
@@ -76,22 +77,24 @@ public class EmployeeUI extends JPanel {
     private void buildListPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        /* — Botonera — */
-        JButton btnNew = new JButton("Nuevo");
+        /* Define botones que existiran en este panel */
+        JButton btnNew = new JButton("Nuevo"); // boton nuevo
+        // al boton nuevo se agrega un listener (evento de escucha)
+        // cuando se hace click en el, entonces realiza una accion o ejecuta un metodo
         btnNew.addActionListener(e -> { 
-            clearForm(); 
-            cards.show(root, "FORM"); 
+            clearForm(); // clearForm -> limpia los controles o inputs para un nuevo registro
+            cards.show(root, "FORM"); // muestra layout con identificador FORM en el DOM
         });
         JButton btnUpd = new JButton("Actualizar");
         btnUpd.addActionListener(e -> { 
             clearForm();
-            int row = table.getSelectedRow();
+            int row = table.getSelectedRow(); // obtiene fila seleccionada, -1 si no hay seleccion
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Selecciona una fila", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            getEmployee(row);
-            cards.show(root, "FORM"); 
+            getEmployee(row); // obtiene los datos del registro seleccionado segun su fila
+            cards.show(root, "FORM");  // muestra layout con identificador FORM en el DOM
         });
         JButton btnDlt = new JButton("Eliminar");
         btnDlt.addActionListener(e -> { 
@@ -100,19 +103,20 @@ public class EmployeeUI extends JPanel {
                 JOptionPane.showMessageDialog(this, "Selecciona una fila", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            onDelete(row);
+            onDelete(row); // elimina registro
         });
         JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // agrega botones al panel
         top.add(btnNew);
         top.add(btnUpd);
         top.add(btnDlt);
 
-        /* — Tabla — */
+        /* agrega controles al panel principal del UI*/
         panel.add(top, BorderLayout.NORTH);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-        root.add(panel, "LISTA");
-        refreshTable();
+        root.add(panel, "LISTA"); // agrega panel con identificador LISTA al DOM
+        refreshTable(); // actualiza los datos de la tabla
     }
 
     /* ===================================================== */
@@ -124,23 +128,27 @@ public class EmployeeUI extends JPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(5,5,5,5);
         c.anchor = GridBagConstraints.WEST;
-
+        // array de labels
         String[] labels = {
             "Nombre:", "Apellido:", "Nº Documento:", "Tipo Documento :",
             "Edad:", "Cumpleaños (yyyy-MM-dd):", "Salario:", "Puesto:", "Email:"
         };
+        // array de inputs
         JTextField[] fields = { firstName,lastName,documentNumber,documentType,age,birthday,salary,position,email };
-
+        // recorre array y agrega en el form en cada fila un label con su input
         for (int i=0;i<labels.length;i++) {
-            c.gridx = 0; c.gridy = i;
+            c.gridx = 0; 
+            c.gridy = i;
             form.add(new JLabel(labels[i]), c);
             c.gridx = 1;
             form.add(fields[i], c);
         }
 
-        /* -------- Botones Guardar / Cancelar -------- */
+        /* declaracion de botones y asignacion de eventos */
         JButton btnSave = new JButton("Guardar");
-        btnSave.addActionListener(e -> onSave());
+        btnSave.addActionListener(e -> {
+            onSave();
+        });
 
         JButton btnCancel = new JButton("Cancelar");
         btnCancel.addActionListener(e -> {
@@ -162,6 +170,7 @@ public class EmployeeUI extends JPanel {
     /* ===================================================== */
     /* =================   L Ó G I C A   =================== */
     /* ===================================================== */
+    // obtencion de empleado segun fila selecionada, buscando en el model de la tabla
     private void getEmployee(int row) {
         firstName.setText(model.getValueAt(row, 1).toString());
         lastName.setText(model.getValueAt(row, 2).toString());
@@ -172,12 +181,15 @@ public class EmployeeUI extends JPanel {
         salary.setText(model.getValueAt(row, 7).toString());
         position.setText(model.getValueAt(row, 8).toString());
         email.setText(model.getValueAt(row, 9).toString());
+        // asignación de id oculto para determinar si se registrara o actualizara el dato
         firstName.putClientProperty("editID", Integer.valueOf(model.getValueAt(row, 0).toString()));
-        cards.show(root, "FORM");
+        cards.show(root, "FORM"); // se muestra el card con identificador FORM
     }
     private void onSave() {
+        // realiza el grabado, se usa try catch para controlar errores
         try {
-            Employee e = new Employee();
+            Employee e = new Employee(); // intancia de clase empleado
+            // asignacion de valores a la instancia de acuerdo al contenido de los inputs
             e.setFirstName(firstName.getText().trim());
             e.setLastName(lastName.getText().trim());
             e.setDocumentNumber(documentNumber.getText().trim());
@@ -187,34 +199,36 @@ public class EmployeeUI extends JPanel {
             e.setSalary(Double.parseDouble(salary.getText().trim()));
             e.setPosition(position.getText().trim());
             e.setEmail(email.getText().trim());
-
+            // obtencion del id oculto
             Object id = firstName.getClientProperty("editID");
-            if (id == null) { // nuevo
-                employeeService.create(e); // inserta en BD y cache
+            if (id == null) { // nuevo registro
+                employeeService.create(e); // inserta en BD y cache (usando el metodo del SERVICE)
                 JOptionPane.showMessageDialog(this, "Empleado creado.");
-            } else {
+            } else { // actualizacion
                 e.setEmployeeID((Integer) id);
-                employeeService.update(e);
-                firstName.putClientProperty("editID", null); // limpia estado
+                employeeService.update(e); // actualiza en BD (usando el metodo del SERVICE)
+                firstName.putClientProperty("editID", null); // limpia id oculto
                 JOptionPane.showMessageDialog(this,"Empleado actualizado");
             }
-            refreshTable();
-            clearForm();
-            cards.show(root, "LISTA");
+            refreshTable(); // refresca tabla
+            clearForm(); // limpia formulario
+            cards.show(root, "LISTA"); // muestra card LISTA
         } catch (Exception ex) {
+            // en caso un error se muestra un mensaje
             JOptionPane.showMessageDialog(this,
                     "Error al guardar: "+ex.getMessage(),
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
     private void onDelete(int row) {
-        int id = (int) model.getValueAt(row, 0);
+        int id = (int) model.getValueAt(row, 0); // obtencion del id del registro seleccionado
+        // validación de confirmación
         if (JOptionPane.showConfirmDialog(this,
                 "¿Eliminar empleado "+id+"?", "Confirmar",
                 JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
             try {
-                employeeService.delete(id);
-                refreshTable();
+                employeeService.delete(id); // elimina registro usando metodo delete del SERVICE
+                refreshTable(); // refresca tabla
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
@@ -223,9 +237,10 @@ public class EmployeeUI extends JPanel {
     /* ---------- utilidades ---------- */
     private void refreshTable() {
         model.setRowCount(0); // limpia datos
-        Employee[] arr = employeeService.getAll(); // **Employee[] (Array)**
+        Employee[] arr = employeeService.getAll(); // obtiene todos los registros y los asgina en array
+        // itera o recorre todos los registros
         for (Employee e : arr) {
-            /* Object[][]: cada fila es Object[] → JTable model */
+            // cada registro se agrega al model de la tabla a mostrar
             model.addRow(new Object[]{
                     e.getEmployeeID(), 
                     e.getFirstName(),

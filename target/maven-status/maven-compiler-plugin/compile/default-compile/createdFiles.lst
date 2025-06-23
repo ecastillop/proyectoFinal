@@ -1,3 +1,4 @@
+com\proyectofinal\universidad\dao\RoomDAO.class
 com\proyectofinal\universidad\service\MeetingService.class
 com\proyectofinal\universidad\dao\MeetingDAO.class
 com\proyectofinal\universidad\dao\EmployeeDAO.class
@@ -7,6 +8,7 @@ com\proyectofinal\universidad\dao\Conexion.class
 com\proyectofinal\universidad\model\Room.class
 com\proyectofinal\universidad\view\EmployeeUI.class
 com\proyectofinal\universidad\model\Employee.class
+com\proyectofinal\universidad\view\RoomUI.class
 com\proyectofinal\universidad\controller\MainController.class
 com\proyectofinal\universidad\service\RoomService.class
 com\proyectofinal\universidad\service\EmployeeService.class

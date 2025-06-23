@@ -19,7 +19,7 @@ public class MainView extends JFrame {
 
     /* ---------- Paneles (módulos) ---------- */
     private final JPanel pnlEmployee; // CRUD de empleados
-    private final JPanel pnlRoom       = new PlaceholderPane("Mantenimiento de Sala");
+    private final JPanel pnlRoom;
     private final JPanel pnlCreateMt   = new PlaceholderPane("Creación de Reunión");
     private final JPanel pnlSelRoom    = new PlaceholderPane("Selección de Sala");
     private final JPanel pnlSchedule   = new PlaceholderPane("Programaciones");
@@ -31,15 +31,25 @@ public class MainView extends JFrame {
         setLocationRelativeTo(null);
 
         /* ----- CRUD de Empleado ----- */
-        JPanel tmp;
+        JPanel tmpEmployee;
         try {
-            tmp = new EmployeeUI(); // CRUD convertido a JPanel
+            tmpEmployee = new EmployeeUI(); // CRUD convertido a JPanel
         } catch (Exception ex) { // control de error
-            tmp = new PlaceholderPane(
+            tmpEmployee = new PlaceholderPane(
                     "<html>Error cargando módulo Empleado:<br>"
                   + ex.getMessage() + "</html>");
         }
-        pnlEmployee = tmp;
+        pnlEmployee = tmpEmployee;
+        /* ----- CRUD de Sala ----- */
+        JPanel tmpSala;
+        try {
+            tmpSala = new RoomUI(); // CRUD convertido a JPanel
+        } catch (Exception ex) { // control de error
+            tmpSala = new PlaceholderPane(
+                    "<html>Error cargando módulo Sala:<br>"
+                  + ex.getMessage() + "</html>");
+        }
+        pnlRoom = tmpSala;
 
         buildLeftMenu(); // primero el menú
         buildCenterCards(); // después las tarjetas
