@@ -21,7 +21,7 @@ public class MainView extends JFrame {
     private final JPanel pnlEmployee; // CRUD de empleados
     private final JPanel pnlRoom;
     private final JPanel pnlCreateMt   = new PlaceholderPane("Creación de Reunión");
-    private final JPanel pnlSelRoom    = new PlaceholderPane("Selección de Sala");
+    private final JPanel pnlSelRoom;
     private final JPanel pnlSchedule   = new PlaceholderPane("Programaciones");
 
     public MainView() {
@@ -50,6 +50,16 @@ public class MainView extends JFrame {
                   + ex.getMessage() + "</html>");
         }
         pnlRoom = tmpSala;
+        //
+        JPanel tmpSelect;
+        try {
+            tmpSelect = new SelectRoomUI(); // CRUD convertido a JPanel
+        } catch (Exception ex) { // control de error
+            tmpSelect = new PlaceholderPane(
+                    "<html>Error cargando módulo seleccion de Sala:<br>"
+                  + ex.getMessage() + "</html>");
+        }
+        pnlSelRoom = tmpSelect;
 
         buildLeftMenu(); // primero el menú
         buildCenterCards(); // después las tarjetas

@@ -10,6 +10,7 @@ com\proyectofinal\universidad\view\EmployeeUI.class
 com\proyectofinal\universidad\model\Employee.class
 com\proyectofinal\universidad\view\RoomUI.class
 com\proyectofinal\universidad\controller\MainController.class
+com\proyectofinal\universidad\view\SelectRoomUI.class
 com\proyectofinal\universidad\service\RoomService.class
 com\proyectofinal\universidad\service\EmployeeService.class
 com\proyectofinal\universidad\view\MainView$PlaceholderPane.class
